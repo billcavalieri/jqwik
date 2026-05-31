@@ -22,8 +22,7 @@ public class JqwikExecutorTests {
 		testRun -> {},
 		previouslyFailedTests,
 		true,
-		false,
-		true
+		false
 	);
 
 	@Example
