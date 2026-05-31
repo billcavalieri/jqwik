@@ -53,7 +53,28 @@ publishing {
 			*/
 
 		}
+
+		// GitHub Packages target for this fork's anti-AI-free releases.
+		// Publish with: ./gradlew publishAllPublicationsToGitHubPackagesRepository
+		// Credentials: set gpr.user / gpr.token in ~/.gradle/gradle.properties
+		// (a GitHub PAT with write:packages scope), or GITHUB_ACTOR / GITHUB_TOKEN in CI.
+		maven {
+			name = "GitHubPackages"
+			url = "https://maven.pkg.github.com/billcavalieri/jqwik"
+			credentials {
+				username = project.findProperty("gpr.user") ?: System.getenv("GITHUB_ACTOR")
+				password = project.findProperty("gpr.token") ?: System.getenv("GITHUB_TOKEN")
+			}
+		}
 	}
+}
+
+// GitHub Packages does not require GPG signatures. The per-module `signing` blocks
+// still register sign tasks for non-snapshot releases; make them non-fatal so a
+// release can be published without a configured signing key. Central Portal
+// releases must still be signed, so configure a key when targeting that repo.
+signing {
+	required = false
 }
 
 java {
